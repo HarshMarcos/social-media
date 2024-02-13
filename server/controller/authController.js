@@ -3,6 +3,7 @@ import generateDefaultAvatar from "../util/avatar.js";
 import fs from "fs/promises";
 import cloudinary from "cloudinary";
 import AppError from "../util/error.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
 const cookieOptions = {
   maxAge: 7 * 24 * 60 * 60 * 1000, // Valid for 7 days
@@ -90,3 +91,39 @@ const register = asyncHandler(async (req, res, next) => {
     user,
   });
 });
+
+const login = asyncHandler(async (req, res, next) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return next(new AppError("All filelds are mandatory", 400));
+  }
+
+  const userExists = await userModel.findOne({ username }).select("+password");
+
+  if (!userExists) {
+    return next(new AppError("Username does not exist", 400));
+  }
+
+  const comparePassword = await userExists.comparePassword(password);
+
+  if (!comparePassword) {
+    return next(
+      new AppError("Password doesnt match, please enter correct password", 400)
+    );
+  }
+
+  userExists.password = undefined;
+
+  const token = await userExists.generateToken();
+
+  res.cookies("token", token, cookieOptions);
+
+  res.status(200).json({
+    success: true,
+    message: "Loggedin Successfully",
+    user: userExists,
+  });
+});
+
+export { register, login };
