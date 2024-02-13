@@ -7,6 +7,22 @@ const PostForm = () => {
     const [lineHeight, setLineHeight] = useState(0);
     const parentRef = useRef(null);
     const [content, setContent] = useState("");
+    const [thumbnail, setThumbnail] = useState(undefined);
+    const [previewImage, setPreviewImage] = useState(null);
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.readAsDataURL(file);
+            reader.addEventListener("load", () => {
+                setPreviewImage(reader.result);
+                setThumbnail(file);
+            })
+        }
+    }
 
     const inputChange = (text) => {
         setContent(text);
@@ -55,13 +71,20 @@ const PostForm = () => {
                         type="file"
                         id='thumbnail'
                         className='hidden'
+                        onChange={handleImageUpload}
                     />
-                    <div className='mt-4 h-56 relative'>
-                        <img src="" alt="Preiview-Image" className='w-full h-full object-cover' />
-                        <img src="" alt="Cancel" className="mt-1 w-5 cursor-pointer absolute top-0.5 right-1" />
-                    </div>
+                    {
+                        previewImage && 
+                        (
+                            <div className='mt-4 h-56 relative'>
+                                <img src={previewImage} alt="Preiview-Image" className='w-full h-full object-cover' />
+                                <img src="./cancel.png" alt="Cancel" className="mt-1 w-5 cursor-pointer absolute top-0.5 right-1" onClick={() => setPreviewImage(undefined)} />
+                            </div>
+                        )
+                    }
+
                     <div className='flex justify-end mt-4' style={{ userSelect: "none" }}>
-                        <button type='submit' className="bg-black dark:bg-white text-white dark:text-black rounded-3xl px-4 py-2 font-medium">
+                        <button disabled={!content && !thumbnail ? true : false} type='submit' className="bg-black dark:bg-white text-white dark:text-black rounded-3xl px-4 py-2 font-medium">
                             Post
                         </button>
                     </div>
