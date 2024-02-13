@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import PostForm from './components/post/PostForm';
 
 function App() {
 
@@ -11,7 +12,8 @@ function App() {
     <Routes>
       <Route exact path='/signup' element={<Signup />} />
       <Route exact path='/login' element={<Login />} />
-      <Route exact path='/' element={<Home />} />
+      <Route path='/' element={<Home />} />
+      <Route path='/new-post' element={<PostForm />} />
     </Routes>
   )
 }
