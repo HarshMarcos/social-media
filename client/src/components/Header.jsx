@@ -33,7 +33,7 @@ const Header = () => {
             </div>
             <div className="rounded-lg cursor-pointer sm:hover:bg-gray-100 sm:dark:hover:bg-dark-secondary  sm:px-8 sm:py-4">
                 <NavLink
-                    to="/new-thread"
+                    to="/new-post"
                     className={({ isActive }) =>
                         isActive ? "dark:text-white" : "text-dark-text"
                     }
