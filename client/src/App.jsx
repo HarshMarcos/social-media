@@ -8,7 +8,7 @@ import EditPost from './pages/EditPost';
 import EditProfile from './pages/EditProfile';
 
 function App() {
-
+  
 
   return (
     <Routes>

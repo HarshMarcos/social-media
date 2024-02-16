@@ -1,4 +1,4 @@
-import asyncHandler from "../middleware/asyncHandler";
+import asyncHandler from "../middleware/asyncHandler.js";
 import userModel from "../model/user.js";
 import AppError from "../util/error.js";
 import cloudinary from "cloudinary";

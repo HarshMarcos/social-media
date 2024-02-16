@@ -1,8 +1,18 @@
 import React, { useState } from 'react'
 import { BiHide, BiShowAlt } from "react-icons/bi";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-hot-toast';
+import { TailSpin } from 'react-loader-spinner'
+import { createAccount } from '../store/slices/AuthSclice';
 
 const Signup = () => {
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // const { loading: isLoading } = useSelector((state) => state?.auth);
+
 
     const [signupData, setSignupData] = useState({
         fullname: "",
@@ -20,9 +30,31 @@ const Signup = () => {
             [name]: value
         });
     };
+
+    const handleSignup = async (e) => {
+        e.preventDefault();
+
+        if (!signupData.username || !signupData.password || !signupData.email || !signupData.fullname) {
+            toast.error("Please fill all the details.");
+        }
+
+        const response = await dispatch(createAccount(signupData));
+
+        if (response?.payload?.success) {
+            navigate("/");
+        }
+
+        setSignupData({
+            fullname: "",
+            username: "",
+            email: "",
+            password: "",
+        });
+    };
     return (
         <div className='flex overflow-x-auto items-center justify-center h-[100vh] bg-dark-secondary'>
             <form
+                onSubmit={handleSignup}
                 noValidate
                 className='flex flex-col justify-center gap-3 p-6 mx-4 sm:mx-0 text-white w-96 shadow-[0_0_10px_#4d4d4d] rounded-lg'
             >
